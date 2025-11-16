@@ -1,0 +1,93 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum GlobalRole {
+  PLATFORM_ADMIN
+  REGULATOR_VIEWER
+  STANDARD_USER
+}
+
+enum InstitutionType {
+  PRIMARIE_SECTOR
+  PMB
+  OPERATOR_SALUBRIZARE
+  MINISTER_MEDIU
+  GARDA_MEDIU
+  AGENTIE_MEDIU
+}
+
+enum TerritoryLevel {
+  SECTOR
+  MUNICIPIU
+  JUDET
+  NATIONAL
+}
+
+enum InstitutionRole {
+  INSTITUTION_ADMIN
+  INSTITUTION_EDITOR
+  INSTITUTION_VIEWER
+}
+
+// ============================================
+// MODELS
+// ============================================
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String   @map("password_hash")
+  globalRole    GlobalRole @default(STANDARD_USER) @map("global_role")
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  institutions  UserInstitution[]
+
+  @@map("users")
+}
+
+model Institution {
+  id             String          @id @default(uuid())
+  name           String
+  type           InstitutionType
+  territoryLevel TerritoryLevel  @map("territory_level")
+  territoryCode  String          @map("territory_code") // ex: S6, B, RO-B
+  isActive       Boolean         @default(true) @map("is_active")
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+
+  // Relations
+  users          UserInstitution[]
+
+  @@map("institutions")
+}
+
+model UserInstitution {
+  id              String          @id @default(uuid())
+  userId          String          @map("user_id")
+  institutionId   String          @map("institution_id")
+  institutionRole InstitutionRole @map("institution_role")
+  createdAt       DateTime        @default(now()) @map("created_at")
+
+  // Relations
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  institution     Institution     @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, institutionId])
+  @@map("user_institutions")
+}
