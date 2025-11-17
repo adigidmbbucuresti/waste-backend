@@ -13,42 +13,17 @@ const PORT = process.env.PORT || 3000;
 // MIDDLEWARE
 // ============================================
 
-// CORS - permite acces din StackBlitz și alte origini
+// CORS configuration
 app.use(cors({
-  origin: function (origin, callback) {
-    // Permite toate origin-urile pentru development
-    // În producție, limitează la FRONTEND_URL din .env
-    const allowedOrigins = [
-      process.env.FRONTEND_URL,
-      'http://localhost:5173',
-      'http://localhost:3000',
-    /https:\/\/.*\.stackblitz\.io$/,
-  /https:\/\/stackblitz\.io$/,
-  /https:\/\/.*\.webcontainer\.io$/,
-  /https:\/\/.*\.local-credentialless\.webcontainer\.io$/
-    ];
-    
-    // Permite requests fără origin (ex: Postman, mobile apps)
-    if (!origin) return callback(null, true);
-    
-    const isAllowed = allowedOrigins.some(pattern => {
-      if (typeof pattern === 'string') {
-        return origin === pattern;
-      }
-      if (pattern instanceof RegExp) {
-        return pattern.test(origin);
-      }
-      return false;
-    });
-    
-    if (isAllowed) {
-      callback(null, true);
-    } else {
-      console.log('Blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
+  origin: function(origin, callback) {
+    // Allow all for debugging
+    callback(null, true);
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
 
 // Parse JSON bodies
