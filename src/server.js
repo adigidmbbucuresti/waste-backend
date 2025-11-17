@@ -22,8 +22,10 @@ app.use(cors({
       process.env.FRONTEND_URL,
       'http://localhost:5173',
       'http://localhost:3000',
-      /\.stackblitz\.io$/,
-      /\.webcontainer\.io$/
+    /https:\/\/.*\.stackblitz\.io$/,
+  /https:\/\/stackblitz\.io$/,
+  /https:\/\/.*\.webcontainer\.io$/,
+  /https:\/\/.*\.local-credentialless\.webcontainer\.io$/
     ];
     
     // Permite requests fără origin (ex: Postman, mobile apps)
