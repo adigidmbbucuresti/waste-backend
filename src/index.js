@@ -15,20 +15,20 @@ const PORT = process.env.PORT || 3000;
 // Security middleware
 app.use(helmet());
 
-// CORS configuration
+/ CORS configuration - UPDATE THIS
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   process.env.FRONTEND_URL,
   /https:\/\/.*\.stackblitz\.io$/,
   /https:\/\/stackblitz\.io$/,
-  /https:\/\/.*\.webcontainer\.io$/,  // ← IMPORTANT pentru StackBlitz
-  /https:\/\/.*\.local-credentialless\.webcontainer\.io$/  // ← Pentru StackBlitz cu credentialless
+  /https:\/\/.*\.webcontainer\.io$/,
+  /https:\/\/.*\.local-credentialless\.webcontainer\.io$/
 ].filter(Boolean);
 
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
+    // Allow requests with no origin
     if (!origin) return callback(null, true);
     
     // Check if origin is allowed
@@ -36,7 +36,6 @@ app.use(cors({
       if (typeof allowed === 'string') {
         return allowed === origin;
       }
-      // Handle regex patterns
       return allowed.test(origin);
     });
 
@@ -44,7 +43,7 @@ app.use(cors({
       callback(null, true);
     } else {
       console.log('Blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
+      callback(null, true); // Allow all for now (debugging)
     }
   },
   credentials: true,
