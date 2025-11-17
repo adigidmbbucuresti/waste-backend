@@ -22,7 +22,8 @@ const allowedOrigins = [
   process.env.FRONTEND_URL,
   /https:\/\/.*\.stackblitz\.io$/,
   /https:\/\/stackblitz\.io$/,
-  /https:\/\/.*\.webcontainer\.io$/   // 👈 adăugăm toate subdomeniile webcontainer.io
+  /https:\/\/.*\.webcontainer\.io$/,  // ← IMPORTANT pentru StackBlitz
+  /https:\/\/.*\.local-credentialless\.webcontainer\.io$/  // ← Pentru StackBlitz cu credentialless
 ].filter(Boolean);
 
 app.use(cors({
