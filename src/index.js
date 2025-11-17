@@ -21,7 +21,8 @@ const allowedOrigins = [
   'http://localhost:3000',
   process.env.FRONTEND_URL,
   /https:\/\/.*\.stackblitz\.io$/,
-  /https:\/\/stackblitz\.io$/
+  /https:\/\/stackblitz\.io$/,
+  /https:\/\/.*\.webcontainer\.io$/   // 👈 adăugăm toate subdomeniile webcontainer.io
 ].filter(Boolean);
 
 app.use(cors({
